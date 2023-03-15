@@ -16,7 +16,7 @@ async function onSubmit(e){
                 email: emailInput.value
             }
             console.log(email)
-            const response = await axios.post("http://100.27.0.10:4000/password/forgotpassword", email)
+            const response = await axios.post("100.27.0.10/password/forgotpassword", email)
             if(response.status === 200){
                 console.log(response);
                 alert("Password Reset link sent. Please check your E-mail.")
