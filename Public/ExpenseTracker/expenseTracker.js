@@ -38,7 +38,7 @@ const page = 1;
 window.addEventListener("DOMContentLoaded", async() => {
    
     try {
-      const response = await axios.get(`100.27.0.10:4000/user/expense/page/?page=${page}`, {
+      const response = await axios.get(`http://100.27.0.10:4000/user/expense/page/?page=${page}`, {
         headers: {
           "Authorization": token,
           "itemsPerPage" : itemsPerPage
@@ -89,7 +89,7 @@ function showPagination(response){
 
 async function getPage(page){
     try {
-      const response = await axios.get(`100.27.0.10:4000/user/expense/page/?page=${page}`, {
+      const response = await axios.get(`http://100.27.0.10:4000/user/expense/page/?page=${page}`, {
         headers: {
           "Authorization": token,
           "itemsPerPage" : itemsPerPage
@@ -151,7 +151,7 @@ function removeFromScreen(){
 
 async function isPremium(){
     try{
-        const user = await axios.get("100.27.0.10:4000/user/status", { headers: {"Authorization" : token }})
+        const user = await axios.get("http://100.27.0.10:4000/user/status", { headers: {"Authorization" : token }})
         // console.log(user)
         if(user.data === true){
             razorpayBtn.style.display ="none";
@@ -171,7 +171,7 @@ async function showLeaderBoard(e){
     e.preventDefault();
     try{
         leaderBoard1.style.display= 'block'
-        const users = await axios.get("100.27.0.10:4000/premium/leadershipboard", { headers: {"Authorization" : token }});
+        const users = await axios.get("http://100.27.0.10:4000/premium/leadershipboard", { headers: {"Authorization" : token }});
         // console.log(users);
         users.data.forEach(user=>{
             // console.log(user)
@@ -196,7 +196,7 @@ async function showTotalExpense() {
     let sum = 0;
    const title =  document.getElementById('expense-title');
    try{
-   const response = await axios.get("100.27.0.10:4000/user/expense", { headers: {"Authorization" : token }})
+   const response = await axios.get("http://100.27.0.10:4000/user/expense", { headers: {"Authorization" : token }})
         // console.log(response)
     response.data.forEach(user => {
     sum += user.amount;
@@ -227,7 +227,7 @@ async function onSubmit(e) {
         category : category.value
     };
     try{
-        const response = await axios.post('100.27.0.10:4000/user/expense', userExpense,{
+        const response = await axios.post('http://100.27.0.10:4000/user/expense', userExpense,{
              headers: {
                 "Authorization" : token 
             }
@@ -251,7 +251,7 @@ async function onSubmit(e) {
             if(confirm('Are You Sure?')){
                 var li= e.target.parentElement;
                 id = li.id;
-                await axios.delete(`100.27.0.10:4000/user/delete/${id}`, { headers: {"Authorization" : token }})
+                await axios.delete(`http://100.27.0.10:4000/user/delete/${id}`, { headers: {"Authorization" : token }})
                 expense.removeChild(li);
                 showTotalExpense();
             }
@@ -269,7 +269,7 @@ async function onSubmit(e) {
             if(e.target.classList.contains('edit')){
                 var li=e.target.parentElement;
                 id = li.id;
-                const response = await axios.get(`100.27.0.10:4000/user/edit/${id}`, { headers: {"Authorization" : token }});
+                const response = await axios.get(`http://100.27.0.10:4000/user/edit/${id}`, { headers: {"Authorization" : token }});
                 console.log(response)
                 expense.removeChild(li);
                 amount.value = response.data.amount;
@@ -294,7 +294,7 @@ async function onSubmit(e) {
             category: category.value
             };
         try{
-            const response = await axios.put(`100.27.0.10:4000/user/edit/${id}`, updatedExpense, { headers: {"Authorization" : token }})
+            const response = await axios.put(`http://100.27.0.10:4000/user/edit/${id}`, updatedExpense, { headers: {"Authorization" : token }})
             showOnScreen(response.data);
             myForm.removeEventListener('submit', updateItem);
             myForm.addEventListener('submit', onSubmit);
@@ -310,13 +310,13 @@ async function onSubmit(e) {
     async function payment(e) {
         try{
             if(e.target.classList.contains('membership')){
-                const response = await axios.get("100.27.0.10:4000/purchase/premium", { headers: {"Authorization" : token }})
+                const response = await axios.get("http://100.27.0.10:4000/purchase/premium", { headers: {"Authorization" : token }})
                 // console.log(response.data.order.id)
                 var options = {
                     "key": response.data.key_id,
                     "order_id": response.data.order.id,
                     "handler": async function (response){
-                        await axios.post("100.27.0.10:4000/purchase/updatetransactionstatus",{
+                        await axios.post("http://100.27.0.10:4000/purchase/updatetransactionstatus",{
                             order_id: options.order_id,
                             payment_id: response.razorpay_payment_id
                         }, { headers: {"Authorization" : token }})
@@ -336,7 +336,7 @@ async function onSubmit(e) {
         rzp1.on('payment.failed', async function (response){
             console.log(response);
             alert("Transaction Failed")
-            await axios.post("100.27.0.10:4000/purchase/transactionfailstatus", response.error.metadata ,{ headers: {"Authorization" : token }})
+            await axios.post("http://100.27.0.10:4000/purchase/transactionfailstatus", response.error.metadata ,{ headers: {"Authorization" : token }})
             
         });
     }
