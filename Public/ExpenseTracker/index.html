@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+    <title>Expense Tracker</title>
+  </head>
+  <body style="background-color: grey;">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center">
+          <div class="box"><h1>Expense Tracker</h1></div>
+          <button id="logout" class="btn btn-info btn-sm float-end logout" style="margin-left: 2px;">LOGOUT</button>
+          <button id="razorpay" class="btn btn-info btn-sm float-end membership">Buy Premium</button>
+          <button id="report" class="btn btn-secondary btn-sm float-start expensereport" style="margin-bottom: 5px; display: none;">Expense Report</button>
+          <div id="razorpay-pr" class="btn btn-info btn-sm float-end" style="display: none;">You are a premium user</div>
+          <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+        </div>
+      </div>
+
+      <div class="fieldset">
+        <div class="box">
+          <form id="my-form">
+              <div class="msg"></div>
+              <div class="row g-3">
+                <div class="col-sm-12 col-md-4">
+                  <label for="expense-amount" class="form-label">Choose Expense Amount:</label>
+                  <input type="number" name="expense-amount" id="expense-amount" class="form-control">
+                </div>
+                <div class="col-sm-12 col-md-4">
+                  <label for="description" class="form-label">Used for:</label>
+                  <input type="text" name="description" id="description" class="form-control">
+                </div>
+                <div class="col-sm-12 col-md-4">
+                  <label for="category" class="form-label">Category</label>
+                  <select id="category" name="category" class="form-select">
+                    <option value="Movie">Movie</option>
+                    <option value="Petrol">Petrol</option>
+                    <option value="Rent">Rent</option>
+                    <option value="Food" selected>Food</option>
+                    <option value="Salary">Salary</option>
+                  </select>
+                </div>
+              </div>
+              <div class="text-center mt-3">
+                <button class="btn btn-primary" type="submit">Add Expense</button>
+                <button id="board-btn" class="btn btn-secondary" type="submit" style="display: none;">Leadership Board </button>
+              </div>
+            </form>
+          </div>
+      </div>
+      <section>
+        <div class="row align-items-center">
+  <div class="col-sm-12 col-md-9">
+    <h3 id="expense-title" class="mt-3" style="text-align: center; padding-left: 200px; margin-bottom: 16px;">Total Expenditure:</h3>
+  </div>
+  <div class="col-sm-12 col-md-3">
+    <div class="row align-items-center">
+      <div class="col-auto">
+        <label for="rowsperpage" class="form-label">Rows per Page:</label>
+      </div>
+      <div class="col-auto">
+        <select id="rowsperpage" name="rowsperpage" class="form-select form-select-sm">
+          <option value="5" selected>5</option>
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="box">
+  <ol id="collection" class="list-group">
+  </ol>
+</div>
+
+      </section>
+      <section id="leadership-br" style="display: none;">
+        <div class="row">
+          <div class="col-12">
+            <h3 id="leaderboard" class="mt-3" style="text-align: center; display: none;">Leadership Board</h3>
+          </div>
+        </div>
+        <div class="box">
+          <ol id="collection-board" class="list-group">
+
+          </ol>
+        </div>
+      </section>
+      <section id="pagination-controls" style="margin-top: 25px;">
+        <nav aria-label="Expense pagination">
+          <ul class="pagination justify-content-center" id="pagination">
+          </ul>
+        </nav>
+        <div class="text-center">
+          <p id="page-info"></p>
+        </div>
+      </section>
+        
+    </div>
+      <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+      <script src="expenseTracker.js"></script>
+      <!-- <script src="tracker.js"></script>  -->
+  </body>
+</html>

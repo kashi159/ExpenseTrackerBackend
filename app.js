@@ -40,6 +40,10 @@ app.use(premiumRoutes);
 app.use(forgetPassword);
 app.use(passwordReset);
 
+app.use((req, res) => {
+    res.sendFile(path.join(__dirname, `Public/${req.url}`))
+})
+
 User.hasMany(UserExpense);
 UserExpense.belongsTo(User)
 
