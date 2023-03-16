@@ -16,7 +16,7 @@ window.addEventListener("DOMContentLoaded", async()=> {
         const newRow = createTableRow(expense);
         table.appendChild(newRow);
       })
-      const links = await axios.get("34.229.254.109:4000/user/downloadlink", { headers: {"Authorization" : token }})
+      const links = await axios.get("34.229.254.109:4000/premium/downloadlink", { headers: {"Authorization" : token }})
       links.data.forEach(link =>{
         const newRow = downloadTableRow(link);
         tableDown.appendChild(newRow);
@@ -89,7 +89,7 @@ downloadBtn.addEventListener('click', onDownload);
 
 async function onDownload(){
     try{
-        const response = await axios.get('34.229.254.109:4000/user/download', { headers: {"Authorization" : token} })
+        const response = await axios.get('34.229.254.109:4000/premium/download', { headers: {"Authorization" : token} })
         // console.log(response)
         if(response.status === 201){
             

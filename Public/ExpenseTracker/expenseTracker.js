@@ -38,7 +38,7 @@ const page = 1;
 window.addEventListener("DOMContentLoaded", async() => {
    
     try {
-      const response = await axios.get(`34.229.254.109:4000/user/expense/page/?page=${page}`, {
+      const response = await axios.get(`34.229.254.109:4000/expense/expense/page/?page=${page}`, {
         headers: {
           "Authorization": token,
           "itemsPerPage" : itemsPerPage
@@ -89,7 +89,7 @@ function showPagination(response){
 
 async function getPage(page){
     try {
-      const response = await axios.get(`34.229.254.109:4000/user/expense/page/?page=${page}`, {
+      const response = await axios.get(`34.229.254.109:4000/expense/expense/page/?page=${page}`, {
         headers: {
           "Authorization": token,
           "itemsPerPage" : itemsPerPage
@@ -196,7 +196,7 @@ async function showTotalExpense() {
     let sum = 0;
    const title =  document.getElementById('expense-title');
    try{
-   const response = await axios.get("34.229.254.109:4000/user/expense", { headers: {"Authorization" : token }})
+   const response = await axios.get("34.229.254.109:4000/expense/expense", { headers: {"Authorization" : token }})
         // console.log(response)
     response.data.forEach(user => {
     sum += user.amount;
@@ -227,7 +227,7 @@ async function onSubmit(e) {
         category : category.value
     };
     try{
-        const response = await axios.post('34.229.254.109:4000/user/expense', userExpense,{
+        const response = await axios.post('34.229.254.109:4000/expense/expense', userExpense,{
              headers: {
                 "Authorization" : token 
             }
@@ -251,7 +251,7 @@ async function onSubmit(e) {
             if(confirm('Are You Sure?')){
                 var li= e.target.parentElement;
                 id = li.id;
-                await axios.delete(`34.229.254.109:4000/user/delete/${id}`, { headers: {"Authorization" : token }})
+                await axios.delete(`34.229.254.109:4000/expense/delete/${id}`, { headers: {"Authorization" : token }})
                 expense.removeChild(li);
                 showTotalExpense();
             }
@@ -269,7 +269,7 @@ async function onSubmit(e) {
             if(e.target.classList.contains('edit')){
                 var li=e.target.parentElement;
                 id = li.id;
-                const response = await axios.get(`34.229.254.109:4000/user/edit/${id}`, { headers: {"Authorization" : token }});
+                const response = await axios.get(`34.229.254.109:4000/expense/edit/${id}`, { headers: {"Authorization" : token }});
                 console.log(response)
                 expense.removeChild(li);
                 amount.value = response.data.amount;
@@ -294,7 +294,7 @@ async function onSubmit(e) {
             category: category.value
             };
         try{
-            const response = await axios.put(`34.229.254.109:4000/user/edit/${id}`, updatedExpense, { headers: {"Authorization" : token }})
+            const response = await axios.put(`34.229.254.109:4000/expense/edit/${id}`, updatedExpense, { headers: {"Authorization" : token }})
             showOnScreen(response.data);
             myForm.removeEventListener('submit', updateItem);
             myForm.addEventListener('submit', onSubmit);
