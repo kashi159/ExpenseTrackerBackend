@@ -12,7 +12,8 @@ const app = express();
 app.use(cors());
 
 
-const userRoutes = require('./routes/user');
+const signUpRoutes = require('./routes/signup');
+const loginRoutes = require('./routes/login');
 const expenseRoutes = require('./routes/expense');
 const purchaseRoutes = require('./routes/purchase');
 const premiumRoutes = require('./routes/premium');
@@ -31,12 +32,13 @@ app.use(morgan('combined', { stream: accessLogStream }))
 
 app.use(bodyParser.json({ extended: false }));
 
-app.use('/user', userRoutes)
-app.use('/expense', expenseRoutes);
-app.use('/purchase', purchaseRoutes);
-app.use('/premium', premiumRoutes);
-app.use('/password',forgetPassword);
-app.use('/reset', passwordReset);
+app.use(signUpRoutes);
+app.use(loginRoutes);
+app.use(expenseRoutes);
+app.use(purchaseRoutes);
+app.use(premiumRoutes);
+app.use(forgetPassword);
+app.use(passwordReset);
 
 app.use((req, res) => {
     res.sendFile(path.join(__dirname, `Public/${req.url}`))
