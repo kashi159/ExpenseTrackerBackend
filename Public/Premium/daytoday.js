@@ -11,7 +11,7 @@ homeBtn.addEventListener('click', function home(){
 
 window.addEventListener("DOMContentLoaded", async()=> {
     try{
-      const response = await axios.get("http://34.229.254.109:4000/user/expense", { headers: {"Authorization" : token }})
+      const response = await axios.get("http://34.229.254.109:4000/expense/expense", { headers: {"Authorization" : token }})
       response.data.forEach(expense => {
         const newRow = createTableRow(expense);
         table.appendChild(newRow);
