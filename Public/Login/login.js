@@ -14,7 +14,7 @@ async function onSubmit(e){
                 email: emailInput.value,
                 password: passwordInput.value
             }
-            const response = await axios.post('http://100.27.0.10/user/login', user)
+            const response = await axios.post('http://34.229.254.109:4000/user/login', user)
             // console.log(response.data)
             if(response.status === 200){
                 localStorage.setItem('token', response.data.token)

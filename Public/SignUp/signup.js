@@ -20,7 +20,7 @@ async function onSubmit(e){
                 email: emailInput.value,
                 password: passwordInput.value
             }
-            const response = await axios.post('100.27.0.10/user/signup', newuser)
+            const response = await axios.post('34.229.254.109:4000/user/signup', newuser)
             console.log(response)
             if(response.status === 200){
                 window.location.href = "../Login/login.html"
