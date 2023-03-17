@@ -41,7 +41,7 @@ window.addEventListener("DOMContentLoaded", async() => {
       const response = await axios.get(`http://3.222.129.220:80/user/expense/page/?page=${page}`, {
         headers: {
           "Authorization": token,
-          "itemsPerPage" : itemsPerPage
+          "itemsPerPage" : itemsPerPage || 5
         }
       });
     //   console.log(response);
@@ -50,7 +50,7 @@ window.addEventListener("DOMContentLoaded", async() => {
       });
       showPagination(response);
       selectedOption = localStorage.getItem('selectedOption')
-      rowsperpage.value = selectedOption || 5;
+      rowsperpage.value = selectedOption;
     } catch (err) {
       console.error(err);
     }
