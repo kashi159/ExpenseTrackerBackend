@@ -50,7 +50,7 @@ window.addEventListener("DOMContentLoaded", async() => {
       });
       showPagination(response);
       selectedOption = localStorage.getItem('selectedOption')
-      rowsperpage.value = selectedOption
+      rowsperpage.value = selectedOption || 5;
     } catch (err) {
       console.error(err);
     }
