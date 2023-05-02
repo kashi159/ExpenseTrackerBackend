@@ -28,7 +28,7 @@ const ForgotPasswordRequests = require('./models/ForgotPasswordRequests')
 // const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 
 // app.use(helmet());
-app.use(morgan('combined'))
+// app.use(morgan('combined'))
 
 app.use(bodyParser.json({ extended: false }));
 

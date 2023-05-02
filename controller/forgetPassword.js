@@ -64,7 +64,7 @@ exports.getUpdatePassword = async(req, res, next)=>{
                     throw new Error(err);
                 }
                 user.update({ password: hash }).then(() => {
-                    res.status(201).json({message: 'Successfuly update the new password'});
+                    res.status(201).json({message: 'Successfuly updated the new password'});
                     result.update({
                         isActive: false
                     })

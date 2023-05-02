@@ -14,7 +14,6 @@ const boardSection = document.getElementById('leadership-br');
 const reportBtn = document.getElementById('report')
 const pagination = document.getElementById('pagination');
 const pageInfo = document.getElementById('page-info');
-reportBtn.addEventListener('click', report)
 const rowsperpage = document.getElementById('rowsperpage');
 const logout = document.getElementById('logout')
 let selectedOption;
@@ -108,6 +107,7 @@ async function getPage(page){
     isPremium();
 }
 
+reportBtn.addEventListener('click', report)
 
 function report(){
     window.location.href = "../Premium/daytodayExpense.html"
