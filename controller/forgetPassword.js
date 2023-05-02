@@ -32,7 +32,7 @@ exports.postForgetPassword = async (req, res, next) => {
                 if note done by you please change your password.`,
                 htmlContent: `<p>Please click on the link to reset your password.
                 if note done by you please change your password.</p>
-                <a href="http://3.222.129.220:80/password/resetpassword/${reset.id}">Reset link</a>`
+                <a href="http://localhost:4000/password/resetpassword/${reset.id}">Reset link</a>`
             })
             console.log(response)
             return res.status(200).json(response);
