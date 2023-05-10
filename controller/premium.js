@@ -1,6 +1,5 @@
 const User = require ('../models/user');
 const UserExpense = require('../models/expense');
-// const sequelize = require('../util/userDatabase');
 const S3Services = require('../services/s3services');
 const express = require('express')
 const AWS = require('aws-sdk');;
@@ -9,13 +8,11 @@ const FileDb = require('../models/downloads');
 
 async function getAllUsersWithExpenses(req, res) {
   try{  
-    const users = await User.findAll({
-      attributes: [
-        'name',
-        'totalExpense'
-      ],
-      order: [['totalExpense', 'DESC']]
-    });
+    const users = await User.find({}, {
+      name: 1,
+      totalExpense: 1,
+      _id: 0
+    }).sort({ totalExpense: -1 });
     res.status(200).json(users)
 
   }catch (err){
@@ -25,17 +22,18 @@ async function getAllUsersWithExpenses(req, res) {
 
 
 
+
 async function download(req, res, next) {
   try {
     const userId = req.user.id;
-    const expenses = await UserExpense.findAll({ where: { userId: userId } });
+    const expenses = await UserExpense.find({ userId: userId });
     const strExpenses = JSON.stringify(expenses);
     const filename = `Expense${userId}/${new Date()}.txt`;
     const fileURL = await S3Services.uploadToS3(strExpenses, filename);
     const link = await FileDb.create({
-        fileURL: fileURL,
-        userId: userId
-    })
+      fileURL: fileURL,
+      userId: userId
+    });
     res.status(201).json({ fileURL, success: true });
   } catch (err) {
     console.log(err);
@@ -44,15 +42,15 @@ async function download(req, res, next) {
 }
 
 async function downloadFile(req, res, next) {
-  try{
+  try {
     const userId = req.user.id;
-    const links = await FileDb.findAll({where: {
-    userId: userId
-  }})
-
-  res.json(links)
-  }catch(err){
-    console.log(err)
+    // console.log(user)
+    const links = await FileDb.find({ userId: userId });
+    // console.log(links)
+    res.json(links);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 }
 

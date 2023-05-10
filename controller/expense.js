@@ -55,7 +55,7 @@ exports.postUserExpense = async (req, res, next) => {
     const description = req.body.description;
     const category = req.body.category;
     const userId = req.user._id
-    console.log(req)
+    // console.log(req)
     try {
       if(amount === undefined || amount.length ===0){
         return res.status(400).json({ success: false, message: 'Parameters missing '})

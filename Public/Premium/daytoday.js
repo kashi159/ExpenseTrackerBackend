@@ -27,6 +27,7 @@ window.addEventListener("DOMContentLoaded", async()=> {
   })
   
   function createTableRow(expense) {
+    // console.log(expense)
     const expenseDate = new Date(expense.createdAt);
     const dayOfWeek = expenseDate.toLocaleString("en-US", { weekday: "long" });
     const dateOfMonth = expenseDate.getDate();

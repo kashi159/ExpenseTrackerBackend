@@ -19,6 +19,10 @@ const userExpense = new Schema({
         type: Schema.Types.ObjectId,
         required: true,
         ref: 'User'
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
     }
 });
 
