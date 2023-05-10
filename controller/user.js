@@ -7,8 +7,8 @@ exports.postSignUpUser = async (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
     try{
-        const user = await User.findOne({ where: { email: email } })
-        if (user) {
+        const user = await User.find({'email': email })
+        if (user.length>0) {
             return res.status(409).json({ error: "User already exists" });
         }
         const saltRounds = 10;
@@ -16,12 +16,14 @@ exports.postSignUpUser = async (req, res, next) => {
             if(err){
               console.log(err);  
             }
-            const result= await User.create({
+            const newUser= new User({
                 name: name,
                 email: email,
                 password: hash
-            })
-                return res.json(result);
+            });
+            const result = await newUser.save()
+              console.log(result)
+              return res.json(result);
         })
        
     }
@@ -37,8 +39,8 @@ function generateToken(id){
 exports.postLoginUser = async (req, res, next) =>{
     const { email, password } = req.body;
     try {
-      const user = await User.findOne({ where: { email } });
-      if (!user) {
+      const user = await User.findOne({ 'email': email });
+      if (!user || user.length === 0) {
         return res.status(404).json({ error: 'User not found' });
       }
       const passwordMatch = await bcrypt.compare(password, user.password);

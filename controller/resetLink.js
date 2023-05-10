@@ -1,7 +1,7 @@
 const UserExpense = require('../models/expense');
 const User = require('../models/user');
 const ForgotPasswordRequests = require('../models/ForgotPasswordRequests')
-const sequelize = require('../util/userDatabase');
+// const sequelize = require('../util/userDatabase');
 
 exports.getResetLink = async (req, res, next)=> {
     const prodId = req.params.id;

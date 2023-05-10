@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt')
 require('dotenv').config();
 const client = Sib.ApiClient.instance
 const apiKey = client.authentications['api-key']
-apiKey.apiKey = process.env.API_KEY
+apiKey.apiKey = process.env.SIB_API_KEY
 const sender = {
     email: 'kashifzafar15@gmail.com',
     name: 'Expense Tracker App'

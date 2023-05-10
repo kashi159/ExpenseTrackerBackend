@@ -1,6 +1,6 @@
 const UserExpense = require('../models/expense');
 const User = require('../models/user');
-const sequelize = require('../util/userDatabase');
+// const sequelize = require('../util/userDatabase');
 
 const ITEMS_PER_PAGE = 5;
 
