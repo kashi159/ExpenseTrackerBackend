@@ -313,7 +313,7 @@ async function onSubmit(e) {
         try{
             if(e.target.classList.contains('membership')){
                 const response = await axios.get("http://localhost:4000/purchase/premium", { headers: {"Authorization" : token }})
-                // console.log(response.data.order.id)
+                console.log(response.data.order.id)
                 var options = {
                     "key": response.data.key_id,
                     "order_id": response.data.order.id,
