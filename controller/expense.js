@@ -1,34 +1,34 @@
 const UserExpense = require('../models/expense');
 const User = require('../models/user');
-// const sequelize = require('../util/userDatabase');
+const mongoose = require('mongoose')
 
 const ITEMS_PER_PAGE = 5;
 
-exports.getUserExpense =  (req, res, next) => {
-  // console.log(req)
-    const userId = req.user.id
-    // console.log(userId)
-    UserExpense.findAll({where: {userId: userId}})
-    .then(expense => {
-        return res.json(expense)
-    })
-    .catch(err => console.log(err))
-}
+exports.getUserExpense = async (req, res, next) => {
+  const userId = req.user._id;
+  try {
+    const expenses = await UserExpense.find({ userId });
+    return res.json(expenses);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 
 exports.getPageData = async (req, res, next) => {
-  const itemsPerPage = parseInt(req.header("itemsPerPage"))
-  // console.log('itemsPerPAGE>>>>>', typeof itemsPerPage)
+  const itemsPerPage = parseInt(req.header("itemsPerPage"));
   const ITEMS_PER_PAGE = itemsPerPage;
   const page = +req.query.page || 1;
   let totalItems;
 
   try {
-    totalItems = await UserExpense.count({ where: { userId: req.user.id } });
-    const expenses = await UserExpense.findAll({
-      where: { userId: req.user.id },
-      offset: (page - 1) * ITEMS_PER_PAGE,
-      limit: ITEMS_PER_PAGE,
-    });
+    totalItems = await UserExpense.countDocuments({ userId: req.user.id });
+    const expenses = await UserExpense.find({
+      userId: req.user.id,
+    })
+      .skip((page - 1) * ITEMS_PER_PAGE)
+      .limit(ITEMS_PER_PAGE);
 
     const pageData = {
       currentPage: page,
@@ -49,136 +49,128 @@ exports.getPageData = async (req, res, next) => {
 
 
 
+
 exports.postUserExpense = async (req, res, next) => {
     const amount = req.body.amount;
     const description = req.body.description;
     const category = req.body.category;
-    const userId = req.user.id
-    let transact;
+    const userId = req.user._id
+    console.log(req)
     try {
-      transact = await sequelize.transaction();
       if(amount === undefined || amount.length ===0){
         return res.status(400).json({ success: false, message: 'Parameters missing '})
       }
-        const result = await UserExpense.create({
+        const newExpense = await UserExpense({
             amount: amount,
             description: description,
             category: category,
             userId: userId
-        }, { transaction: transact});
-        await User.increment('totalExpense', {
-            by: amount,
-            where: { id: userId},
-            transaction: transact
-          });
-          await transact.commit();
+        });
+        await User.updateOne(
+          { _id: userId },
+          { $inc: { totalExpense: amount } }
+        );
+        
+        const result = await newExpense.save();
+        // console.log(result)
         return res.json(result);
     } catch (err) {
-      if (transact) {
-        await transact.rollback();
-      }
         console.log(err);
     }
 };
 
 
+
 exports.deleteUserExpense = async (req, res, next) => {
-    let transact;
-    try {
-      transact = await sequelize.transaction();
-      const prodId = req.params.id;
-      const UserId = req.user.id;
-      // console.log(req.user)
-      const expense = await UserExpense.findOne({
-        where: {
-          id: prodId,
-          userId: UserId
-        }
-      });
-      if (!expense) {
-        return res.status(404).json({ message: 'Expense not found' });
-      }
-      await expense.destroy();
-      await User.decrement('totalExpense', {
-        by: expense.amount,
-        where: { id: req.user.id },
-        transaction: transact
-      });
-      await transact.commit();
-      return res.status(204).end();
-    } catch (err) {
-      if (transact) {
-        await transact.rollback();
-      }
-      console.log(err);
-      return res.status(500).json({ error: 'Internal server error' });
+  const expenseId = req.params.id;
+
+  if (!mongoose.Types.ObjectId.isValid(expenseId)) {
+    return res.status(404).json({ message: 'Expense not found' });
+  }
+
+  try {
+    const expense = await UserExpense.findByIdAndDelete({
+      _id: expenseId,
+      userId: req.user.id,
+    });
+
+    if (!expense) {
+      return res.status(404).json({ message: 'Expense not found' });
     }
-  };
-  
+
+    await User.findByIdAndUpdate(
+      req.user.id,
+      { $inc: { totalExpense: -expense.amount } }
+    );
+
+    return res.status(204).end();
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+
 
 exports.getEditExpense = async(req, res, next) =>{
-    const prodId = req.params.id;
-    const UserId = req.user.id;
-    let transact;
-    try{
-        transact = await sequelize.transaction();
-        const expense = await UserExpense.findOne({
-            where: {
-                id: prodId,
-                userId: UserId
-            }
-        })
-        await User.decrement('totalExpense', {
-            by: expense.amount,
-            where: { id: req.user.id },
-            transaction: transact
-          });
-          await transact.commit();
-          return res.json(expense)
+  const prodId = req.params.id;
+  const UserId = req.user.id;
+
+  try {
+    const expense = await UserExpense.findOne({
+      _id: prodId,
+      userId: UserId
+    });
+    if (!expense) {
+      return res.status(404).json({ message: 'Expense not found' });
     }
-    catch(err) {
-      if (transact) {
-        await transact.rollback();
-      }
-      console.log(err)
-    }
-}
+    await User.findByIdAndUpdate(req.user.id, {
+      $inc: { totalExpense: -expense.amount }
+    });
+    return res.json(expense);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+
+
 
 exports.postEditExpense = async (req, res, next) => {
-  let transact;
-    try {
-      transact = await sequelize.transaction();
-      const amount = req.body.amount;
-      const description = req.body.description;
-      const category = req.body.category;
-      const prodId = req.params.id;
-      const UserId = req.user.id;
-      const expense = await UserExpense.findOne({
-        where: {
-          id: prodId,
-          userId: UserId,
-        },
-      });
-      if (!expense) {
-        return res.status(404).json({ message: "Expense not found" });
-      }
-      expense.amount = amount;
-      expense.description = description;
-      expense.category = category;
-      const updatedExpense = await expense.save();
-      await User.increment('totalExpense', {
-        by: amount,
-        where: { id: req.user.id },
-        transaction: transact
-      });
-      await transact.commit();
-      return res.json(updatedExpense);
-    } catch (error) {
-      if (transact) {
-        await transact.rollback();
-      }
-      console.log(error);
-      return res.status(500).json({ message: "Internal server error" });
+  const { amount, description, category } = req.body;
+  const prodId = req.params.id;
+  const userId = req.user.id;
+  let session;
+  try {
+    session = await mongoose.startSession();
+    session.startTransaction();
+    const expense = await UserExpense.findOneAndUpdate(
+      { _id: prodId, userId },
+      { amount, description, category },
+      { new: true, session }
+    );
+    if (!expense) {
+      await session.abortTransaction();
+      session.endSession();
+      return res.status(404).json({ message: "Expense not found" });
     }
-  };
+    await User.findOneAndUpdate(
+      { _id: userId },
+      { $inc: { totalExpense: amount } },
+      { new: true, session }
+    );
+    await session.commitTransaction();
+    session.endSession();
+    return res.json(expense);
+  } catch (error) {
+    if (session) {
+      await session.abortTransaction();
+      session.endSession();
+    }
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
   

@@ -116,9 +116,10 @@ function report(){
 const displayedExpenses = [];
 
 function showOnScreen(user) {
+    // console.log(user)
     const li = document.createElement('li');
     li.className= 'list-group-item'
-    li.setAttribute('id', user.id);
+    li.setAttribute('id', user._id);
     const textNode= `₹ ${user.amount}-  ${user.description}-  ${user.category}`
     li.appendChild(document.createTextNode(textNode));
     expense.appendChild(li);
@@ -232,6 +233,7 @@ async function onSubmit(e) {
                 "Authorization" : token 
             }
         });
+        // console.log(response);
         showOnScreen(response.data);
         //clear fields
         showTotalExpense()
@@ -275,7 +277,7 @@ async function onSubmit(e) {
                 amount.value = response.data.amount;
                 description.value = response.data.description;
                 category.value = response.data.category
-                id= response.data.id
+                id= response.data._id
                 console.log(id)
                 myForm.removeEventListener('submit', onSubmit);
                 myForm.addEventListener('submit', updateItem);   
