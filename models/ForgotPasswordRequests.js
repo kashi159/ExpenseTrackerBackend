@@ -1,19 +1,21 @@
-// const Sequelize = require('sequelize');
-// // const sequelize = require('../util/userDatabase');
-// const { v4: uuidv4 } = require('uuid');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-// const PasswordReset = sequelize.define('ForgotPasswordRequests', {
-//     id: {
-//         type: Sequelize.UUID,
-//         defaultValue: Sequelize.UUIDV4,
-//         primaryKey: true
-//     },
-//     isActive: Sequelize.BOOLEAN
-// });
+const PasswordResetSchema = new Schema({
+    userId:{
+        type: Schema.Types.ObjectId,
+            required: true,
+            ref: 'User'
+      },
+    id: {
+        type: String,
+        required: true,
+      },
+    isActive: {
+        type: Boolean,
+        default: true,
+  },
+});
 
-// // Override the default id generation with a UUID generator
-// PasswordReset.beforeCreate((resetRequest, _) => {
-//     resetRequest.id = uuidv4();
-// });
+module.exports = mongoose.model('PasswordReset', PasswordResetSchema);
 
-// module.exports = PasswordReset;
