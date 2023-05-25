@@ -6,7 +6,7 @@ const DB_USERNAME = process.env.SQL_KEY;
 const DB_PASSWORD = process.env.SQL_SECRET;
 
 
-const sequelize = new Sequelize(DB_NAME , DB_USERNAME , DB_PASSWORD , {
+const sequelize = new Sequelize('expense-tracker-app' , 'root' , 'Kashif@125' , {
     dialect: 'mysql',
     host: 'localhost'
 })

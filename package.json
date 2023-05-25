@@ -4,7 +4,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": " node app1.js",
+    "start": " nodemon app1.js",
     "start:dev": "nodemon app1.js"
   },
   "author": "Kashif Zafar",
