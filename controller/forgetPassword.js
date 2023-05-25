@@ -40,7 +40,7 @@ exports.postForgetPassword = async (req, res, next) => {
     }
     catch(err) {
         console.error(err);
-        return res.status(409).json({ error: "User does not exists" });
+        return res.status(409).json({ error: "Server Error" });
     };
 }
 
